@@ -4,6 +4,7 @@
 MeDCMotor motor1(M1);
 MeDCMotor motor2(M2);
 MeUltrasonicSensor us0(PORT_3);
+MeLineFollower lineFinder(PORT_2);
 MeLEDMatrix ledMtx(PORT_1);
 WroobImp wroob("MBSM");
 
@@ -23,10 +24,14 @@ const char *set_speed_str = "SetSpeed";
 const char *get_speed_str = "GetSpeed";
 const char *get_range_str = "GetRange";
 const char *set_led_str = "SetLedDispBmp";
+const char *get_line_snr_str = "GetLineSensor";
+const char *ls0_str = "LN0";
+const char *ls1_str = "LN1";
 
+StaticJsonDocument<80> event;
 void my_callback(JsonObject &payload) {
-  StaticJsonDocument<128> event;
-
+  event.clear();
+  
   if (payload[cmd_str].isNull())
     return;
       
@@ -39,26 +44,49 @@ void my_callback(JsonObject &payload) {
       motor2.run(payload[values_str][motor2_str]);
       speed2 = payload[values_str][motor2_str];
     }
-  } else if (strcmp(payload[cmd_str], get_speed_str) == 0) {
+    return;
+  } 
+  
+  if (strcmp(payload[cmd_str], get_speed_str) == 0) {
     event[ev_str] = get_speed_str;
     for (int i = 0; i < payload[motors_str].size(); i++) {
-      if (payload[motors_str].getElement(i) == motor1_str)
+      if (strcmp(payload[motors_str].getElement(i), motor1_str) == 0)
         event[values_str][motor1_str] = speed1;
-      if (payload[motors_str].getElement(i) == motor2_str)
+      if (strcmp(payload[motors_str].getElement(i), motor2_str) == 0)
         event[values_str][motor2_str] = speed2;
     }
     wroob.sendMessage(event);
-  } else if (strcmp(payload[cmd_str], get_range_str) == 0) {
+    return;
+  }
+  
+  if (strcmp(payload[cmd_str], get_range_str) == 0) {
     event[ev_str] = get_range_str;
     for (int i = 0; i < payload[sensors_str].size(); i++) {
-      if (payload[sensors_str].getElement(i) == us0_str)
+      if (strcmp(payload[sensors_str].getElement(i), us0_str) == 0)
         event[values_str][us0_str] = us0.distanceCm();
     }
     wroob.sendMessage(event);
-  } else if (strcmp(payload[cmd_str], set_led_str) == 0) {
+    return;
+  }
+  
+  if (strcmp(payload[cmd_str], set_led_str) == 0) {
     ledMtx.clearScreen();
     copyArray(payload[cols_str], drawBuffer, payload[cols_str].size());
     ledMtx.drawBitmap(0, 0, 16, drawBuffer);
+
+    return;
+  }
+  
+  if (strcmp(payload[cmd_str], get_line_snr_str) == 0) {
+    event[ev_str] = get_line_snr_str;
+    for (int i = 0; i < payload[sensors_str].size(); i++) {
+      if (strcmp(payload[sensors_str].getElement(i), ls0_str) == 0)
+        event[values_str][ls0_str] = lineFinder.readSensor1();
+      if (strcmp(payload[sensors_str].getElement(i), ls1_str) == 0)
+        event[values_str][ls1_str] = lineFinder.readSensor2();        
+    }
+    wroob.sendMessage(event);
+    return;
   }
 }
 
