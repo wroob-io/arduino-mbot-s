@@ -6,6 +6,7 @@ MeDCMotor motor2(M2);
 MeUltrasonicSensor us0(PORT_3);
 MeLineFollower lineFinder(PORT_2);
 MeLEDMatrix ledMtx(PORT_1);
+MeBuzzer buzzer;
 WroobImp wroob("MBSM");
 
 int speed1 = 0;
@@ -25,8 +26,11 @@ const char *get_speed_str = "GetSpeed";
 const char *get_range_str = "GetRange";
 const char *set_led_str = "SetLedDispBmp";
 const char *get_line_snr_str = "GetLineSensor";
+const char *play_tone_str = "PlayTone";
 const char *ls0_str = "LN0";
 const char *ls1_str = "LN1";
+const char *note_freq_str = "frequency";
+const char *note_dur_str = "duration";
 
 StaticJsonDocument<80> event;
 void my_callback(JsonObject &payload) {
@@ -86,6 +90,14 @@ void my_callback(JsonObject &payload) {
         event[values_str][ls1_str] = lineFinder.readSensor2();        
     }
     wroob.sendMessage(event);
+    return;
+  }
+
+  if (strcmp(payload[cmd_str], play_tone_str) == 0) {
+    if (payload.containsKey(note_freq_str) &&
+        payload.containsKey(note_dur_str)) {
+      buzzer.tone(payload[note_freq_str], payload[note_dur_str]);
+    }
     return;
   }
 }
