@@ -31,9 +31,9 @@ const char *set_led_str = "SetLedDispBmp";
 const char *get_line_snr_str = "GetLineSensor";
 const char *play_tone_str = "PlayTone";
 const char *set_color_str = "SetColor";
-const char *ls0_str = "LN0";
-const char *ls1_str = "LN1";
 const char *get_light_str = "GetLightSensor";
+const char *ln0_str = "LN0";
+const char *ln1_str = "LN1";
 const char *li0_str = "LI0";
 const char *note_freq_str = "frequency";
 const char *note_dur_str = "duration";
@@ -93,10 +93,10 @@ void my_callback(JsonObject &payload) {
   if (strcmp(payload[cmd_str], get_line_snr_str) == 0) {
     event[ev_str] = get_line_snr_str;
     for (int i = 0; i < payload[sensors_str].size(); i++) {
-      if (strcmp(payload[sensors_str].getElement(i), ls0_str) == 0)
-        event[values_str][ls0_str] = lineFinder.readSensor1();
-      if (strcmp(payload[sensors_str].getElement(i), ls1_str) == 0)
-        event[values_str][ls1_str] = lineFinder.readSensor2();        
+      if (strcmp(payload[sensors_str].getElement(i), ln0_str) == 0)
+        event[values_str][ln0_str] = lineFinder.readSensor1();
+      if (strcmp(payload[sensors_str].getElement(i), ln1_str) == 0)
+        event[values_str][ln1_str] = lineFinder.readSensor2();        
     }
     wroob.sendMessage(event);
     return;
