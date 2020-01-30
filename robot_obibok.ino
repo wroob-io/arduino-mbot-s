@@ -8,6 +8,7 @@ MeLineFollower lineFinder(PORT_2);
 MeLEDMatrix ledMtx(PORT_1);
 MeBuzzer buzzer;
 MeRGBLed rgbLed(7, 2);
+MeLightSensor lightSensor(6);
 
 WroobImp wroob("MBSM");
 
@@ -32,6 +33,8 @@ const char *play_tone_str = "PlayTone";
 const char *set_color_str = "SetColor";
 const char *ls0_str = "LN0";
 const char *ls1_str = "LN1";
+const char *get_light_str = "GetLightSensor";
+const char *li0_str = "LI0";
 const char *note_freq_str = "frequency";
 const char *note_dur_str = "duration";
 const char *red_str = "red";
@@ -114,6 +117,16 @@ void my_callback(JsonObject &payload) {
       rgbLed.setColor(0, payload[red_str], payload[green_str], payload[blue_str]);
       rgbLed.show();
     }
+    return;
+  }
+  
+  if (strcmp(payload[cmd_str], get_light_str) == 0) {
+    event[ev_str] = get_light_str;
+    for (int i = 0; i < payload[sensors_str].size(); i++) {
+      if (strcmp(payload[sensors_str].getElement(i), li0_str) == 0)
+        event[values_str][li0_str] = lightSensor.read();     
+    }
+    wroob.sendMessage(event);
     return;
   }
 }
