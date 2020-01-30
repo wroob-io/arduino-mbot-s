@@ -7,6 +7,8 @@ MeUltrasonicSensor us0(PORT_3);
 MeLineFollower lineFinder(PORT_2);
 MeLEDMatrix ledMtx(PORT_1);
 MeBuzzer buzzer;
+MeRGBLed rgbLed(7, 2);
+
 WroobImp wroob("MBSM");
 
 int speed1 = 0;
@@ -27,10 +29,14 @@ const char *get_range_str = "GetRange";
 const char *set_led_str = "SetLedDispBmp";
 const char *get_line_snr_str = "GetLineSensor";
 const char *play_tone_str = "PlayTone";
+const char *set_color_str = "SetColor";
 const char *ls0_str = "LN0";
 const char *ls1_str = "LN1";
 const char *note_freq_str = "frequency";
 const char *note_dur_str = "duration";
+const char *red_str = "red";
+const char *green_str = "green";
+const char *blue_str = "blue";
 
 StaticJsonDocument<80> event;
 void my_callback(JsonObject &payload) {
@@ -97,6 +103,16 @@ void my_callback(JsonObject &payload) {
     if (payload.containsKey(note_freq_str) &&
         payload.containsKey(note_dur_str)) {
       buzzer.tone(payload[note_freq_str], payload[note_dur_str]);
+    }
+    return;
+  }
+
+  if (strcmp(payload[cmd_str], set_color_str) == 0) {
+    if (payload.containsKey(red_str) &&
+        payload.containsKey(green_str) &&
+        payload.containsKey(blue_str)) {
+      rgbLed.setColor(0, payload[red_str], payload[green_str], payload[blue_str]);
+      rgbLed.show();
     }
     return;
   }
