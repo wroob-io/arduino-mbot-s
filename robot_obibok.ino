@@ -32,9 +32,11 @@ const char *get_line_snr_str = "GetLineSensor";
 const char *play_tone_str = "PlayTone";
 const char *set_color_str = "SetColor";
 const char *get_light_str = "GetLightSensor";
+const char *button_str = "GetButton";
 const char *ln0_str = "LN0";
 const char *ln1_str = "LN1";
 const char *li0_str = "LI0";
+const char *bt0_str = "BT0";
 const char *note_freq_str = "frequency";
 const char *note_dur_str = "duration";
 const char *red_str = "red";
@@ -138,7 +140,24 @@ void setup() {
   ledMtx.drawBitmap(0, 0, 16, drawBuffer);
 }
 
+bool pressed = false;
 void loop() {
   // put your main code here, to run repeatedly:
   wroob.feed();
+
+  if ( wroob.isRegistered()) {
+    if (!pressed && (0 ^ (analogRead(A7) > 10 ? 0 : 1))){
+      event.clear();
+      event[ev_str] = button_str;
+      event[values_str][bt0_str] = true;
+      wroob.sendMessage(event);
+      pressed = true;
+    } else if (pressed && (1 ^ (analogRead(A7) > 10 ? 0 : 1))){
+      event.clear();
+      event[ev_str] = button_str;
+      event[values_str][bt0_str] = false;
+      wroob.sendMessage(event);
+      pressed = false;
+    }
+  }
 }
