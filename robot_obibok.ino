@@ -26,6 +26,7 @@ const char *ev_str = "ev";
 const char *set_speed_str = "SetSpeed";
 const char *get_range_str = "GetRange";
 const char *set_led_str = "SetLedDispBmp";
+const char *set_ledlvl_str = "SetLedDspLvl";
 const char *get_line_snr_str = "GetLine";
 const char *play_tone_str = "PlayTone";
 const char *set_color_str = "SetColor";
@@ -40,6 +41,7 @@ const char *note_dur_str = "dur";
 const char *red_str = "r";
 const char *green_str = "g";
 const char *blue_str = "b";
+const char *lvl_str = "level";
 
 StaticJsonDocument<80> event;
 void my_callback(JsonObject &payload) {
@@ -75,6 +77,13 @@ void my_callback(JsonObject &payload) {
     copyArray(payload[cols_str], drawBuffer, payload[cols_str].size());
     ledMtx.drawBitmap(0, 0, 16, drawBuffer);
 
+    return;
+  }
+
+  if (strcmp(payload[cmd_str], set_ledlvl_str) == 0) {
+    if (payload.containsKey(lvl_str)) {
+      ledMtx.setBrightness(payload[lvl_str]);
+    }
     return;
   }
   
