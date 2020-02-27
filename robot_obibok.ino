@@ -100,10 +100,12 @@ void my_callback(JsonObject &payload) {
   }
 
   if (strcmp(payload[cmd_str], play_tone_str) == 0) {
+    event[ev_str] = play_tone_str;
     if (payload.containsKey(note_freq_str) &&
         payload.containsKey(note_dur_str)) {
       buzzer.tone(payload[note_freq_str], payload[note_dur_str]);
     }
+    wroob.sendMessage(event);
     return;
   }
 
