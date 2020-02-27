@@ -15,9 +15,8 @@ WroobImp wroob("MBSM");
 int speed1 = 0;
 int speed2 = 0;
 unsigned char drawBuffer[16] = {0,112,136,142,137,113,1,1,1,1,113,137,142,136,112,0};
-const char *motor1_str = "motor1";
-const char *motor2_str = "motor2";
-const char *motors_str = "motors";
+const char *motor0_str = "M0";
+const char *motor1_str = "M1";
 const char *sensors_str = "sensors";
 const char *values_str = "values";
 const char *us0_str = "US0";
@@ -25,23 +24,22 @@ const char *cols_str = "cols";
 const char *cmd_str = "cmd";
 const char *ev_str = "ev";
 const char *set_speed_str = "SetSpeed";
-const char *get_speed_str = "GetSpeed";
 const char *get_range_str = "GetRange";
 const char *set_led_str = "SetLedDispBmp";
-const char *get_line_snr_str = "GetLineSensor";
+const char *get_line_snr_str = "GetLine";
 const char *play_tone_str = "PlayTone";
 const char *set_color_str = "SetColor";
-const char *get_light_str = "GetLightSensor";
-const char *button_str = "GetButton";
+const char *get_light_str = "GetLight";
+const char *button_str = "GetButtons";
 const char *ln0_str = "LN0";
 const char *ln1_str = "LN1";
-const char *li0_str = "LI0";
+const char *lt0_str = "LT0";
 const char *bt0_str = "BT0";
-const char *note_freq_str = "frequency";
-const char *note_dur_str = "duration";
-const char *red_str = "red";
-const char *green_str = "green";
-const char *blue_str = "blue";
+const char *note_freq_str = "freq";
+const char *note_dur_str = "dur";
+const char *red_str = "r";
+const char *green_str = "g";
+const char *blue_str = "b";
 
 StaticJsonDocument<80> event;
 void my_callback(JsonObject &payload) {
@@ -51,28 +49,16 @@ void my_callback(JsonObject &payload) {
     return;
       
   if (strcmp(payload[cmd_str], set_speed_str) == 0) {  
-    if (payload[values_str].containsKey(motor1_str)) {
-      motor1.run(payload[values_str][motor1_str]);
-      speed1 = payload[values_str][motor1_str];
+    if (payload[values_str].containsKey(motor0_str)) {
+      motor1.run(payload[values_str][motor0_str]);
+      speed1 = payload[values_str][motor0_str];
     }
-    if (payload[values_str].containsKey(motor2_str)) {
-      motor2.run(payload[values_str][motor2_str]);
-      speed2 = payload[values_str][motor2_str];
+    if (payload[values_str].containsKey(motor1_str)) {
+      motor2.run(payload[values_str][motor1_str]);
+      speed2 = payload[values_str][motor1_str];
     }
     return;
   } 
-  
-  if (strcmp(payload[cmd_str], get_speed_str) == 0) {
-    event[ev_str] = get_speed_str;
-    for (int i = 0; i < payload[motors_str].size(); i++) {
-      if (strcmp(payload[motors_str].getElement(i), motor1_str) == 0)
-        event[values_str][motor1_str] = speed1;
-      if (strcmp(payload[motors_str].getElement(i), motor2_str) == 0)
-        event[values_str][motor2_str] = speed2;
-    }
-    wroob.sendMessage(event);
-    return;
-  }
   
   if (strcmp(payload[cmd_str], get_range_str) == 0) {
     event[ev_str] = get_range_str;
@@ -125,12 +111,22 @@ void my_callback(JsonObject &payload) {
   if (strcmp(payload[cmd_str], get_light_str) == 0) {
     event[ev_str] = get_light_str;
     for (int i = 0; i < payload[sensors_str].size(); i++) {
-      if (strcmp(payload[sensors_str].getElement(i), li0_str) == 0)
-        event[values_str][li0_str] = lightSensor.read();     
+      if (strcmp(payload[sensors_str].getElement(i), lt0_str) == 0)
+        event[values_str][lt0_str] = lightSensor.read();     
     }
     wroob.sendMessage(event);
     return;
   }
+
+  if (strcmp(payload[cmd_str], button_str) == 0) {
+    event[ev_str] = button_str;
+    for (int i = 0; i < payload[sensors_str].size(); i++) {
+      if (strcmp(payload[sensors_str].getElement(i), bt0_str) == 0)
+        event[values_str][bt0_str] = (0 ^ (analogRead(A7) > 10 ? 0 : 1));     
+    }
+    wroob.sendMessage(event);
+    return;
+  }  
 }
 
 void setup() {
@@ -144,20 +140,4 @@ bool pressed = false;
 void loop() {
   // put your main code here, to run repeatedly:
   wroob.feed();
-
-  if ( wroob.isRegistered()) {
-    if (!pressed && (0 ^ (analogRead(A7) > 10 ? 0 : 1))){
-      event.clear();
-      event[ev_str] = button_str;
-      event[values_str][bt0_str] = true;
-      wroob.sendMessage(event);
-      pressed = true;
-    } else if (pressed && (1 ^ (analogRead(A7) > 10 ? 0 : 1))){
-      event.clear();
-      event[ev_str] = button_str;
-      event[values_str][bt0_str] = false;
-      wroob.sendMessage(event);
-      pressed = false;
-    }
-  }
 }
