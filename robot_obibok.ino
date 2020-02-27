@@ -145,6 +145,8 @@ void setup() {
   wroob.begin(my_callback);
   ledMtx.setBrightness(3);
   ledMtx.drawBitmap(0, 0, 16, drawBuffer);
+  rgbLed.reset(7);
+  rgbLed.show();
 }
 
 bool pressed = false;
