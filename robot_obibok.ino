@@ -42,6 +42,7 @@ const char *red_str = "r";
 const char *green_str = "g";
 const char *blue_str = "b";
 const char *lvl_str = "level";
+const char *stop_str = "Stop";
 
 StaticJsonDocument<80> event;
 void my_callback(JsonObject &payload) {
@@ -138,6 +139,12 @@ void my_callback(JsonObject &payload) {
     wroob.sendMessage(event);
     return;
   }  
+
+  if (strcmp(payload[cmd_str], stop_str) == 0) {
+    motor1.run(0);
+    motor2.run(0);
+    return;
+  }
 }
 
 void setup() {
