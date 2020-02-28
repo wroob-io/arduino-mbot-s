@@ -10,7 +10,7 @@ MeBuzzer buzzer;
 MeRGBLed rgbLed(7, 2);
 MeLightSensor lightSensor(6);
 
-WroobImp wroob("MBSM");
+WroobImp wroob("mbsm");
 
 int speed1 = 0;
 int speed2 = 0;
@@ -138,7 +138,7 @@ void my_callback(JsonObject &payload) {
     }
     wroob.sendMessage(event);
     return;
-  }  
+  }
 
   if (strcmp(payload[cmd_str], stop_str) == 0) {
     motor1.run(0);
