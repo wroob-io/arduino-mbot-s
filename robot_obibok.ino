@@ -12,8 +12,7 @@ MeLightSensor lightSensor(6);
 
 WroobImp wroob("mbsm");
 
-int speed1 = 0;
-int speed2 = 0;
+int speed0 = 0;
 unsigned char drawBuffer[16] = {0,112,136,142,137,113,1,1,1,1,113,137,142,136,112,0};
 const char *motor0_str = "M0";
 const char *motor1_str = "M1";
@@ -53,12 +52,11 @@ void my_callback(JsonObject &payload) {
       
   if (strcmp(payload[cmd_str], set_speed_str) == 0) {  
     if (payload[values_str].containsKey(motor0_str)) {
-      motor1.run(payload[values_str][motor0_str]);
-      speed1 = payload[values_str][motor0_str];
+      speed0 = payload[values_str][motor0_str];
+      motor1.run(speed0 * (-1));
     }
     if (payload[values_str].containsKey(motor1_str)) {
       motor2.run(payload[values_str][motor1_str]);
-      speed2 = payload[values_str][motor1_str];
     }
     return;
   } 
