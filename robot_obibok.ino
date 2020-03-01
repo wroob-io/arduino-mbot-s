@@ -3,7 +3,7 @@
 
 MeDCMotor motor1(M1);
 MeDCMotor motor2(M2);
-MeUltrasonicSensor us0(PORT_3);
+MeUltrasonicSensor us1(PORT_3);
 MeLineFollower lineFinder(PORT_2);
 MeLEDMatrix ledMtx(PORT_1);
 MeBuzzer buzzer;
@@ -14,11 +14,11 @@ WroobImp wroob("mbsm");
 
 int speed0 = 0;
 unsigned char drawBuffer[16] = {0,112,136,142,137,113,1,1,1,1,113,137,142,136,112,0};
-const char *motor0_str = "M0";
 const char *motor1_str = "M1";
+const char *motor2_str = "M2";
 const char *sensors_str = "sensors";
 const char *values_str = "values";
-const char *us0_str = "US0";
+const char *us1_str = "US1";
 const char *cols_str = "cols";
 const char *cmd_str = "cmd";
 const char *ev_str = "ev";
@@ -31,10 +31,10 @@ const char *play_tone_str = "PlayTone";
 const char *set_color_str = "SetColor";
 const char *get_light_str = "GetLight";
 const char *button_str = "GetButtons";
-const char *ln0_str = "LN0";
 const char *ln1_str = "LN1";
-const char *lt0_str = "LT0";
-const char *bt0_str = "BT0";
+const char *ln2_str = "LN2";
+const char *lt1_str = "LT1";
+const char *bt1_str = "BT1";
 const char *note_freq_str = "freq";
 const char *note_dur_str = "dur";
 const char *red_str = "r";
@@ -51,12 +51,12 @@ void my_callback(JsonObject &payload) {
     return;
       
   if (strcmp(payload[cmd_str], set_speed_str) == 0) {  
-    if (payload[values_str].containsKey(motor0_str)) {
-      speed0 = payload[values_str][motor0_str];
+    if (payload[values_str].containsKey(motor1_str)) {
+      speed0 = payload[values_str][motor1_str];
       motor1.run(speed0 * (-1));
     }
-    if (payload[values_str].containsKey(motor1_str)) {
-      motor2.run(payload[values_str][motor1_str]);
+    if (payload[values_str].containsKey(motor2_str)) {
+      motor2.run(payload[values_str][motor2_str]);
     }
     return;
   } 
@@ -64,8 +64,8 @@ void my_callback(JsonObject &payload) {
   if (strcmp(payload[cmd_str], get_range_str) == 0) {
     event[ev_str] = get_range_str;
     for (int i = 0; i < payload[sensors_str].size(); i++) {
-      if (strcmp(payload[sensors_str].getElement(i), us0_str) == 0)
-        event[values_str][us0_str] = us0.distanceCm();
+      if (strcmp(payload[sensors_str].getElement(i), us1_str) == 0)
+        event[values_str][us1_str] = us1.distanceCm();
     }
     wroob.sendMessage(event);
     return;
@@ -89,10 +89,10 @@ void my_callback(JsonObject &payload) {
   if (strcmp(payload[cmd_str], get_line_snr_str) == 0) {
     event[ev_str] = get_line_snr_str;
     for (int i = 0; i < payload[sensors_str].size(); i++) {
-      if (strcmp(payload[sensors_str].getElement(i), ln0_str) == 0)
-        event[values_str][ln0_str] = lineFinder.readSensor1();
       if (strcmp(payload[sensors_str].getElement(i), ln1_str) == 0)
-        event[values_str][ln1_str] = lineFinder.readSensor2();        
+        event[values_str][ln1_str] = lineFinder.readSensor1();
+      if (strcmp(payload[sensors_str].getElement(i), ln2_str) == 0)
+        event[values_str][ln2_str] = lineFinder.readSensor2();        
     }
     wroob.sendMessage(event);
     return;
@@ -121,8 +121,8 @@ void my_callback(JsonObject &payload) {
   if (strcmp(payload[cmd_str], get_light_str) == 0) {
     event[ev_str] = get_light_str;
     for (int i = 0; i < payload[sensors_str].size(); i++) {
-      if (strcmp(payload[sensors_str].getElement(i), lt0_str) == 0)
-        event[values_str][lt0_str] = lightSensor.read();     
+      if (strcmp(payload[sensors_str].getElement(i), lt1_str) == 0)
+        event[values_str][lt1_str] = lightSensor.read();     
     }
     wroob.sendMessage(event);
     return;
@@ -131,8 +131,8 @@ void my_callback(JsonObject &payload) {
   if (strcmp(payload[cmd_str], button_str) == 0) {
     event[ev_str] = button_str;
     for (int i = 0; i < payload[sensors_str].size(); i++) {
-      if (strcmp(payload[sensors_str].getElement(i), bt0_str) == 0)
-        event[values_str][bt0_str] = (0 ^ (analogRead(A7) > 10 ? 0 : 1));     
+      if (strcmp(payload[sensors_str].getElement(i), bt1_str) == 0)
+        event[values_str][bt1_str] = (0 ^ (analogRead(A7) > 10 ? 0 : 1));     
     }
     wroob.sendMessage(event);
     return;
