@@ -132,7 +132,7 @@ void my_callback(JsonObject &payload) {
     event[ev_str] = button_str;
     for (int i = 0; i < payload[sensors_str].size(); i++) {
       if (strcmp(payload[sensors_str].getElement(i), bt1_str) == 0)
-        event[values_str][bt1_str] = (0 ^ (analogRead(A7) > 10 ? 0 : 1));     
+        event[values_str][bt1_str] = (bool) (0 ^ (analogRead(A7) > 10 ? 0 : 1));     
     }
     wroob.sendMessage(event);
     return;
