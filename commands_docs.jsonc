@@ -1,0 +1,126 @@
+// ------------------------------------------------------------------------------------------------
+// Stop command - ustawia wartość prędkości silników na 0
+{
+    "cmd": "Stop"
+}
+// ------------------------------------------------------------------------------------------------
+// GetRange command
+{
+    "cmd": "GetRange",
+    "sensors": [
+        "US1"
+    ]
+}
+// GetRange event
+{
+    "ev": "GetRange",
+    "values": {
+        "US1": 56.15 // [cm] czujnik zwraca tutaj floata
+    }
+}
+// ------------------------------------------------------------------------------------------------
+// GetLine command
+{
+    "cmd": "GetLine",
+    "sensors": [
+        "LN1",
+        "LN2"
+    ]
+}
+// GetLine event
+{
+    "ev": "GetLine",
+    "values": {
+        "LN1": true,
+        "LN2": false
+    }
+}
+// ------------------------------------------------------------------------------------------------
+// GetLight command
+{
+    "cmd": "GetLight",
+    "sensors": [
+        "LT1"
+    ]
+}
+// GetLight event
+{
+    "ev": "GetLight",
+    "values": {
+        "LT1": 564  // 
+    }
+}
+// ------------------------------------------------------------------------------------------------
+// GetButtons command
+{
+    "cmd": "GetButtons",
+    "sensors": [
+        "BT1"
+    ]
+}
+// GetButtons event
+{
+    "ev": "GetButtons",
+    "values": {
+        "BT1": true
+    }
+}
+// ------------------------------------------------------------------------------------------------
+// SetSpeed command
+{
+    "cmd": "SetSpeed",
+    "values": {
+        "M1": 230, //wartości -255 -  255
+        "M2": -150 //wartości -255 -  255
+    }
+}
+// ------------------------------------------------------------------------------------------------
+// PlayTone command
+{
+    "cmd": "PlayTone",
+    "freq": 200, // Hz
+    "dur": 1000 // ms
+}
+// Tutaj, w celu utrzymania spójności, najlepiej by było, żeby moduł wysyłał taką wiadomość
+// po zakończeniu odtwarzania
+{
+    "ev": "PlayTone",
+}
+// Wtedy fajnie w Pythonie będzie czekać na koniec odtwarzania, tak jak w APM.
+// ------------------------------------------------------------------------------------------------
+// SetColor command
+{
+    "cmd": "SetColor",
+    "r": 255,
+    "g": 0,
+    "b": 128
+}
+// ------------------------------------------------------------------------------------------------
+// SetLedDispBmp command
+{
+    "cmd": "SetLedDispBmp",
+    "cols": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+    ]
+}
+// ------------------------------------------------------------------------------------------------
+// SetLedDispLvl command
+{
+    "cmd": "SetLedDispLvl",
+    "level": 5 // wartości (0-8) 
+}
