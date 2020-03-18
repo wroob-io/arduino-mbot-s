@@ -4,7 +4,7 @@
 2. Download and install `MakeBlock` Arduino library. Library source code and installation instructions can be found [here](https://github.com/Makeblock-official/Makeblock-Libraries).
 3. Go to Arduino library directory (on Linux it is usually `~/Arduino/libraries`) and clone there `WroobImp` Arduino library:
 ```sh
-$ git clone git@gitlab.wroob.io:modules/arduino-wroobimp.git
+$ git clone https://github.com/wroob-io/arduino-wroobimp.git
 ```
 4. Install necessary Arduino libraries directly from `Arduino IDE`: "Tools -> LIbrary Manager -> Filter your search... -> Install":
  * `ArduinoJson`,
@@ -12,7 +12,7 @@ $ git clone git@gitlab.wroob.io:modules/arduino-wroobimp.git
  * `ArduinoUniqueID`.
 5. Clone `arduino-mbot-s` project:
 ```sh
-$ git clone git@gitlab.wroob.io:modules/arduino-mbot-s.git
+$ git clone https://github.com/wroob-io/arduino-mbot-s.git
 ```
 
 #### How to build and flash device:
