@@ -10,7 +10,7 @@ MeBuzzer buzzer;
 MeRGBLed rgbLed(7, 2);
 MeLightSensor lightSensor(6);
 
-WroobImp wroob("mbsm");
+WroobImp wroob(7, "mbsm");
 
 int speed0 = 0;
 unsigned char drawBuffer[16] = {0,112,136,142,137,113,1,1,1,1,113,137,142,136,112,0};
