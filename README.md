@@ -7,7 +7,7 @@
 $ git clone https://github.com/wroob-io/arduino-wroobimp.git
 ```
 4. Install necessary Arduino libraries directly from `Arduino IDE`: "Tools -> LIbrary Manager -> Filter your search... -> Install":
- * `ArduinoJson` use vesrion **6.15.0**,
+ * `ArduinoJson` use version **6.15.0**,
  * `TimerOne`,
  * `ArduinoUniqueID`.
 5. Clone `arduino-mbot-s` project:
